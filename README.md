@@ -17,18 +17,21 @@ Flutter Taipei 準備要來響應前幾週 GDG Taipei 辦的 Best practice chall
 
 在活動的尾聲，我們會從有參與這次活動的夥伴中  
 徵求自願者，向大家分享自己在活動中的專案和思路  
-若已經是 Flutter 開發者，也可以分享自己平時的開發習慣和慣用的程式架構🙌  
+若已經是 Flutter 開發者，也可以分享自己平時的開發習慣和慣用的程式架構 🙌  
 當然～～～好康是絕對不能少的！我們已經向 Google 爭取到小禮物啦！  
 準備送給自願分享者以及此次活動的優勝者囉🏆  
 
 話不多說！趕快 Fork 專案！Let's get started !  
 專案傳送門： https://github.com/flutterTaipei/BestArchitectureChallenge
 
+**如果對活動有任何建議或想法的，也歡迎來信通知我們唷🥳**  
+**聯絡方式：flutter.taipei@gmail.com**
+
 ## 活動時間
 即日起至 2021 年 8 月 31 日晚上 00:00 分截止
 
 ## 評選方式
-以 Github 專案獲得的星星數，由多到少排序，取前 3 名為優勝者**
+以 Github 專案獲得的星星數，由多到少排序，取前 3 名為優勝者
 
 ## 獲勝獎品
 Google 贊助的 Flutter 馬克杯乙份 🎁
@@ -36,8 +39,8 @@ Google 贊助的 Flutter 馬克杯乙份 🎁
 ## 參賽方式
 
 1. Fork Flutter Taipei 的 專案到你自己的 Github 上
-2. 在專案 README 找地方註明「此為參加 Flutter Best Architecture Challenge 活動的專案」，並留下可以讓我們聯絡到你聯絡方式3
-3. . 改寫架構後並提交，就這麼簡單！
+2. 在專案 README 找地方註明「此為參加 Flutter Best Architecture Challenge 活動的專案」，並留下可以讓我們聯絡到你聯絡方式
+3. 改寫架構後並提交，就這麼簡單！
 
 ## 增加星星小秘訣⭐️⭐️⭐️
 
