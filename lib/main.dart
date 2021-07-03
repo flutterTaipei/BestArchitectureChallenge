@@ -2,7 +2,40 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:http/http.dart' as http;
+
+enum SortConditionEnum { sortWithId, sortWithTitle }
+
+List sortData(SortConditionEnum sortConditionEnum, data) {
+  if (sortConditionEnum == SortConditionEnum.sortWithId) {
+    data.sort((a, b) {
+      return int.parse(a['id'].toString())
+          .compareTo(int.parse(b['id'].toString()));
+    });
+  } else if (sortConditionEnum == SortConditionEnum.sortWithTitle) {
+    data.sort((a, b) {
+      return a['title'].toString().compareTo(b['title'].toString());
+    });
+  }
+  return data;
+}
+
+ValueNotifier<List> useFetchData() {
+  final _data = useState([]);
+  var url = Uri.https('jsonplaceholder.typicode.com', '/posts');
+  var response;
+
+  http.get(url).then((value) {
+    response = value;
+    print("response=${response.body}");
+
+    List<dynamic> result = jsonDecode(response.body);
+    _data.value = result;
+  });
+
+  return _data;
+}
 
 void main() {
   runApp(MyApp());
@@ -21,47 +54,36 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class PostPage extends StatefulWidget {
+class PostPage extends HookWidget {
   PostPage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _PostPageState createState() => _PostPageState();
-}
-
-class _PostPageState extends State<PostPage> {
-  static const int _sortWithId = 1;
-  static const int _sortWithTitle = 2;
-
-  List<dynamic> _posts = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchData(_sortWithId);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final sortCondition =
+        useState<SortConditionEnum>(SortConditionEnum.sortWithId);
+    final fetchPosts = useFetchData();
+    final _posts = sortData(sortCondition.value, fetchPosts.value);
+
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text(title),
           actions: <Widget>[
             PopupMenuButton(
                 icon: Icon(Icons.more_vert),
                 itemBuilder: (context) => [
                       PopupMenuItem(
                         child: Text('使用id排序'),
-                        value: _sortWithId,
+                        value: SortConditionEnum.sortWithId,
                       ),
                       PopupMenuItem(
                         child: Text('使用title排序'),
-                        value: _sortWithTitle,
+                        value: SortConditionEnum.sortWithTitle,
                       )
                     ],
-                onSelected: (int value) {
-                  _fetchData(value);
+                onSelected: (SortConditionEnum value) {
+                  sortCondition.value = value;
                 })
           ],
         ),
@@ -93,25 +115,5 @@ class _PostPageState extends State<PostPage> {
             return Divider();
           },
         ));
-  }
-
-  void _fetchData(int sort) async {
-    var url = Uri.https('jsonplaceholder.typicode.com', '/posts');
-    var response = await http.get(url);
-    print("response=${response.body}");
-    List<dynamic> result = jsonDecode(response.body);
-    if (sort == _sortWithId) {
-      result.sort((a, b) {
-        return int.parse(a['id'].toString())
-            .compareTo(int.parse(b['id'].toString()));
-      });
-    } else if (sort == _sortWithTitle) {
-      result.sort((a, b) {
-        return a['title'].toString().compareTo(b['title'].toString());
-      });
-    }
-    setState(() {
-      _posts = result;
-    });
   }
 }
