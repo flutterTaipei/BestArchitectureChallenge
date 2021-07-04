@@ -1,30 +1,74 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:best_architecture_challenge/main.dart';
+import 'widget_test.mocks.dart';
 
+@GenerateMocks([http.Client, http.Request, http.Response])
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+  final MockClient client = MockClient();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  group('fetchData', () {
+    test('returns a posts if the http call completes successfully', () async {
+      final postsUri = Uri.https('jsonplaceholder.typicode.com', '/posts');
+      when(client.get(postsUri)).thenAnswer((_) async => http.Response(
+          '[{"usetId":1,"id": 1, "title": "test", "body": "mock"}]', 200));
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      expect(
+          await fetchData(client, postsUri),
+          jsonDecode(
+              '[{"usetId":1,"id": 1, "title": "test", "body": "mock"}]'));
+    });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    test('throws an exception if the http call completes with an error', () {
+      final client = MockClient();
+      final postsUri = Uri.https('jsonplaceholder.typicode.com', '/posts');
+      when(
+        client.get(postsUri),
+      ).thenAnswer((_) async => http.Response('Not Found', 404));
+
+      expect(fetchData(client, postsUri), throwsException);
+    });
+  });
+  group('sortPostsData', () {
+    final testData = [
+      {"id": 1, "body": 'zfqwe qe kqwe lqwe', "title": 'dqwes1'},
+      {"id": 2, "body": 'aboeqwelqwe', "title": 'aqweqwel'},
+      {"id": 3, "body": '1weqp123', "title": 'bdfwe'},
+    ];
+    test('sortWithId', () {
+      expect(sortPostsData(SortConditionEnum.sortWithId, testData), testData);
+    });
+    test('sortWithBodyLength', () {
+      expect(sortPostsData(SortConditionEnum.sortWithBodyLength, testData), [
+        {"id": 3, "body": '1weqp123', "title": 'bdfwe'},
+        {"id": 2, "body": 'aboeqwelqwe', "title": 'aqweqwel'},
+        {"id": 1, "body": 'zfqwe qe kqwe lqwe', "title": 'dqwes1'},
+      ]);
+    });
+    test('sortWithTitle', () {
+      expect(
+        sortPostsData(SortConditionEnum.sortWithTitle, testData),
+        [
+          {'id': 2, 'body': 'aboeqwelqwe', 'title': 'aqweqwel'},
+          {'id': 3, 'body': '1weqp123', 'title': 'bdfwe'},
+          {'id': 1, 'body': 'zfqwe qe kqwe lqwe', 'title': 'dqwes1'}
+        ],
+      );
+    });
+    test('sortWithTitleLength', () {
+      expect(
+        sortPostsData(SortConditionEnum.sortWithTitleLength, testData),
+        [
+          {'id': 3, 'body': '1weqp123', 'title': 'bdfwe'},
+          {'id': 1, 'body': 'zfqwe qe kqwe lqwe', 'title': 'dqwes1'},
+          {'id': 2, 'body': 'aboeqwelqwe', 'title': 'aqweqwel'},
+        ],
+      );
+    });
   });
 }

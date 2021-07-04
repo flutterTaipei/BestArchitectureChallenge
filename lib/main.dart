@@ -5,34 +5,84 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:http/http.dart' as http;
 
-enum SortConditionEnum { sortWithId, sortWithTitle }
+enum SortConditionEnum {
+  sortWithId,
+  sortWithTitle,
+  sortWithTitleLength,
+  sortWithBodyLength
+}
 
-List sortData(SortConditionEnum sortConditionEnum, data) {
+List sortPostsData(SortConditionEnum sortConditionEnum, data) {
+  final _data = []..addAll(data);
   if (sortConditionEnum == SortConditionEnum.sortWithId) {
-    data.sort((a, b) {
+    _data.sort((a, b) {
       return int.parse(a['id'].toString())
           .compareTo(int.parse(b['id'].toString()));
     });
   } else if (sortConditionEnum == SortConditionEnum.sortWithTitle) {
-    data.sort((a, b) {
+    _data.sort((a, b) {
       return a['title'].toString().compareTo(b['title'].toString());
     });
+  } else if (sortConditionEnum == SortConditionEnum.sortWithTitleLength) {
+    _data.sort((a, b) {
+      return a['title']
+          .toString()
+          .length
+          .compareTo(b['title'].toString().length);
+    });
+  } else if (sortConditionEnum == SortConditionEnum.sortWithBodyLength) {
+    _data.sort((a, b) {
+      return a['body'].toString().length.compareTo(b['body'].toString().length);
+    });
   }
-  return data;
+  return _data;
 }
 
-ValueNotifier<List> useFetchData() {
+Future<List<dynamic>> fetchData(
+  http.Client client,
+  Uri postsUri,
+) async {
+  final response = await client.get(postsUri);
+  if (response.statusCode == 200) {
+    var result = jsonDecode(response.body);
+
+    return result;
+  } else {
+    throw Exception('Failed to load posts');
+  }
+}
+
+class Posts {
+  final int userId;
+  final int id;
+  final String title;
+  final String body;
+
+  Posts(
+      {required this.id,
+      required this.userId,
+      required this.title,
+      required this.body});
+
+  factory Posts.fromJson(Map<String, dynamic> json) {
+    return Posts(
+      userId: json['userId'],
+      id: json['id'],
+      title: json['title'],
+      body: json['body'],
+    );
+  }
+}
+
+ValueNotifier<List> useFetchPostData() {
   final _data = useState([]);
-  var url = Uri.https('jsonplaceholder.typicode.com', '/posts');
-  var response;
-
-  http.get(url).then((value) {
-    response = value;
-    print("response=${response.body}");
-
-    List<dynamic> result = jsonDecode(response.body);
-    _data.value = result;
-  });
+  final postsUri = Uri.https('jsonplaceholder.typicode.com', '/posts');
+  final _client = http.Client();
+  useEffect(() {
+    fetchData(_client, postsUri).then((value) {
+      _data.value = value;
+    });
+  }, []);
 
   return _data;
 }
@@ -63,8 +113,8 @@ class PostPage extends HookWidget {
   Widget build(BuildContext context) {
     final sortCondition =
         useState<SortConditionEnum>(SortConditionEnum.sortWithId);
-    final fetchPosts = useFetchData();
-    final _posts = sortData(sortCondition.value, fetchPosts.value);
+    final fetchPosts = useFetchPostData();
+    final _posts = sortPostsData(sortCondition.value, fetchPosts.value);
 
     return Scaffold(
         appBar: AppBar(
@@ -80,6 +130,14 @@ class PostPage extends HookWidget {
                       PopupMenuItem(
                         child: Text('使用title排序'),
                         value: SortConditionEnum.sortWithTitle,
+                      ),
+                      PopupMenuItem(
+                        child: Text('使用title長度排序'),
+                        value: SortConditionEnum.sortWithTitleLength,
+                      ),
+                      PopupMenuItem(
+                        child: Text('使用body長度排序'),
+                        value: SortConditionEnum.sortWithBodyLength,
                       )
                     ],
                 onSelected: (SortConditionEnum value) {
