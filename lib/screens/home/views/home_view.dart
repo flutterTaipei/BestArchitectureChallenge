@@ -1,3 +1,4 @@
+import 'package:best_architecture_challenge/screens/components/post_tile.dart';
 import 'package:best_architecture_challenge/screens/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -39,26 +40,7 @@ class HomeView extends GetView<HomeController> {
             return ListView.separated(
               itemCount: _controller.postList.length,
               itemBuilder: (context, index) {
-                String id = _controller.postList[index].id.toString();
-                String title = _controller.postList[index].title;
-                String body = _controller.postList[index].body;
-                return Container(
-                    padding: EdgeInsets.all(8),
-                    child: RichText(
-                      text: TextSpan(
-                        style: DefaultTextStyle.of(context).style,
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: "$id. $title",
-                            style: TextStyle(fontSize: 18, color: Colors.red),
-                          ),
-                          TextSpan(
-                            text: '\n' + body,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ));
+                return PostTile(item: _controller.postList[index]);
               },
               separatorBuilder: (context, index) {
                 return Divider();
