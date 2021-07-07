@@ -1,4 +1,0 @@
-io/flutter/plugins/GeneratedPluginRegistrant.java
- io.flutter.plugins.GeneratedPluginRegistrant
-com/example/best_architecture_challenge/BuildConfig.java
- com.example.best_architecture_challenge.BuildConfig

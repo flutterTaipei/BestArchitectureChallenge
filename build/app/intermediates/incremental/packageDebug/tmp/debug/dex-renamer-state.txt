@@ -1,4 +1,0 @@
-#Wed Jul 07 23:33:16 CST 2021
-base.0=/Users/clement_lin/Documents/WORK/Project/Flutter/SpeedCode/BestArchitectureChallenge/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
-path.0=classes.dex
-renamed.0=classes.dex
