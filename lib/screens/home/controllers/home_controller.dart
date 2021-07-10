@@ -26,7 +26,6 @@ class HomeController extends GetxController {
 
   void _fetchPosts() {
     _fetchPostUseCase.execute(FetchPostUseCaseParams()).then((value) {
-      print('ClementDebug: ${value.length}');
       postList.clear();
       postList.addAll(value);
       update();

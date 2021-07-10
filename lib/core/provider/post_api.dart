@@ -9,5 +9,6 @@ abstract class PostApi {
   factory PostApi(Dio dio, {String baseUrl}) = _PostApi;
 
   @GET("/posts")
+  @NoBody()
   Future<List<Post>> getPosts();
 }

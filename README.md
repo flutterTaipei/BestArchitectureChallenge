@@ -1,25 +1,60 @@
 # 📢📢📢 Flutter Best Architecture Challenge 📢📢📢
-嗨！Flutter Taipei 的大家還好嗎？  
-由於疫情嚴峻，Flutter Taipei 已經有一陣子沒有辦活動了🥲  
-已經很多人在敲碗問有沒有線上活動可以參加，別急別急！我們可是都聽到了呢！  
-Flutter Taipei 準備要來響應前幾週 GDG Taipei 辦的 Best practice challenge 活動啦 📢  
-活動內容是將我們準備的一個 Code 非常 Free Style 的 Flutter Project  
-目標是將它改寫成你自己心中認為最理想的樣子🤘  
-不管你是要 BLoC/MVVM/MVC/MVP/MVI/Redux 或是各種架構通通都沒有問題😎  
-再搭配你知道的好用 Library、分享你會如何做單元測試、UI整合測試等等  
-讓你想怎麼 show 就怎麼 show，讓大家知道你多麽的 6⃣ (單押x3) 
 
-也許在實際開發中，需求單純的專案不需套用過多 Pattern，畢竟殺雞焉用牛刀呢🔪  
-但我們希望透過這次的活動，讓大家在面對專案架構時，產生更多元化的思考  
-對於開發老手而言，可以分享自己的技術架構與思路、與其他經驗豐富的夥伴一起交流切磋  
-對於剛入門的初心者，也能參考別人架構的實踐方式  
-實作完後讓大家看有沒有自己原本沒注意到的地方，相信一定能收到很棒的回饋！  
+**「此為參加 Flutter Best Architecture Challenge 活動的專案」**
+**聯絡方式：clementlin321@gmail.com**
 
-在活動的尾聲，我們會從有參與這次活動的夥伴中  
-徵求自願者，向大家分享自己在活動中的專案和思路  
-若已經是 Flutter 開發者，也可以分享自己平時的開發習慣和慣用的程式架構 🙌  
-當然～～～好康是絕對不能少的！我們已經向 Google 爭取到小禮物啦！  
-準備送給自願分享者以及此次活動的優勝者囉🏆  
+Hi, This is Clement
+感謝Flutter Taipei舉辦這個活動解救WFH到快悶死的我XD
+
+本次我採用的是經典Clean Architecture架構，雖然對這項目來說跟用光劍殺螞蟻沒兩樣，
+但是專案規模越大，你越能感受Clean Architecture的優勢，畫面、業務邏輯、資料…職責明確的分層，
+高複用性、以及高測試性，會節省你許多維護時間。
+
+<div align="center">
+<img src="/doc_img/clean_circle.png"/>
+</div>
+
+上圖是`Clean Architecture`的概念圖，架構中有四個角色，以及一條`Dependecy Rule`，線的方向代表依賴關係，外層依賴內層，每一層除了內層成員外，不知道外層發生的任何事，例如：`UseCases`能使用`Entities`提供的對外接口，本身也提供對外接口。
+
+四個角色分別是：
+
+* **Entities**：也能理解為Model。
+
+* **UseCases**：usecase持有Entities，負責操作Entities資料存取以及管理商業邏輯，本身提供Presenter層使用。
+
+* **Presenters**：提供接口給UI呼叫，使用UseCase操作商業邏輯。
+
+* **UI**：UI、tools、framework都是屬於這塊。
+
+## Clean Architecture in Flutter
+Clean Architecture在Flutter實作上可以理解成MVVM + Repository pattern的組合
+
+假設我們從上帝視角來看一個專案可以分成三個部份：
+
+<div align="center">
+<img src="/doc_img/clean_architecture_all.png"/>
+</div>
+
+### Data Layer
+
+<div align="center">
+<img src="/doc_img/data_layer.png"/>
+</div>
+
+Model層實作Repository Pattern只專注於資料存取，Repository是倉庫的意思，它掌管所有資料的入口，UseCase一律透過Repository來存取資料。Call Api和存取本地儲存(資料庫/Shared Preferences)都在Repository內執行。
+
+### Domain Layer
+
+<div align="center">
+<img src="/doc_img/domain_layer.png"/>
+</div>
+
+`UseCase` 封裝商業邏輯，目的是提高其複用性。
+
+UseCase跟其它class命名不同，因為`UseCase`使用上跟function相同，所以要用`動詞+名詞`組成如`GetUserInfoUseCase`。
+
+### Presentation Layer
+
 
 話不多說！趕快 Fork 專案！Let's get started !  
 專案傳送門： https://github.com/flutterTaipei/BestArchitectureChallenge

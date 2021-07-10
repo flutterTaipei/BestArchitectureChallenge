@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:best_architecture_challenge/core/core_injection.dart';
-import 'package:best_architecture_challenge/screens/home/bindings/home_bindings.dart';
-import 'package:best_architecture_challenge/screens/home/views/home_view.dart';
+import 'package:best_architecture_challenge/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,10 +16,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      initialRoute: '/',
-      getPages: [
-        GetPage(name: '/', page: () => HomeView(), binding: HomeBindings()),
-      ],
+      initialRoute: AppPages.INITIAL,
+      getPages: AppPages.routes,
     );
   }
 }

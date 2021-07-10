@@ -19,7 +19,7 @@ class _PostApi implements PostApi {
   Future<List<Post>> getPosts() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    final String? _data = null;
     final _result = await _dio.fetch<List<dynamic>>(_setStreamType<List<Post>>(
         Options(method: 'GET', headers: <String, dynamic>{}, extra: _extra)
             .compose(_dio.options, '/posts',
