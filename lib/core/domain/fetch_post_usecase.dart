@@ -13,7 +13,6 @@ class FetchPostUseCase extends UseCase<PostRepository, FetchPostUseCaseParams> {
   Future<List<Post>> execute(FetchPostUseCaseParams param) {
     return repository.fetchPosts();
   }
-
 }
 
 class FetchPostUseCaseParams {
