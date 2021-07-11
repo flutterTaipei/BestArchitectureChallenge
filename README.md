@@ -1,3 +1,7 @@
+<div align="center">
+<img src="/doc_img/cover.jpg"/>
+</div>
+
 # 📢📢📢 Flutter Best Architecture Challenge 📢📢📢
 
 **「此為參加 Flutter Best Architecture Challenge 活動的專案」**
