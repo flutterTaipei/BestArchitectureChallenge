@@ -458,3 +458,7 @@ testWidgets('Home test', (tester) async {
    expect(testPosts[0].title, controller.postList[0].title);
 });
 ```
+
+### Ref.
+
+https://medium.com/stepstone-tech/clean-architecture-with-reactive-use-cases-c943d7a8f69c
