@@ -31,6 +31,9 @@ void main() async {
       expect(testPosts[0].id, posts[0].id);
       expect(testPosts[0].title, posts[0].title);
       expect(testPosts[0].body, posts[0].body);
+
+      verify(postApi.getPosts());
+      verifyNoMoreInteractions(postApi);
     });
   });
 }

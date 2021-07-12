@@ -11,11 +11,11 @@ import 'usecase_test.mocks.dart';
 void main() async {
 
   group('repository test', () {
-
+    late MockPostRepositoryImpl mockRepo;
     late FetchPostUseCase fetchPostUseCase;
 
     setUp(() {
-      final mockRepo = MockPostRepositoryImpl();
+      mockRepo = MockPostRepositoryImpl();
       fetchPostUseCase = FetchPostUseCase(mockRepo);
       when(mockRepo.fetchPosts()).thenAnswer((_) async => Future.value(testPosts));
     });
@@ -27,6 +27,9 @@ void main() async {
       expect(testPosts[0].id, posts[0].id);
       expect(testPosts[0].title, posts[0].title);
       expect(testPosts[0].body, posts[0].body);
+
+      verify(mockRepo.fetchPosts());
+      verifyNoMoreInteractions(mockRepo);
     });
   });
 }
